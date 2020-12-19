@@ -15,8 +15,10 @@
  ```
 
 # Features:
-- Encrypt files in any directory
-- Decrypt any file that has been decrypted.
+- [x] Encrypt files in any directory
+- [x] Decrypt any file that has been decrypted.
+- [ ] Iterate over any sub directory and encrypt everything inside it.
+- [ ] Deal with permissions.
 
 # How to use:
 - **1**: Run ```create_key.py``` and change ALL instances of self.key in ```reaper.py``` to the key that you've just got from ```create_key.py```.
