@@ -20,7 +20,7 @@
 - [x] Iterate over any sub directory and encrypt everything inside it.
 
 # To do:
-- [] If there are duplicate files, one of them cannot be encrypted
+- [ ] If there are duplicate files, one of them cannot be encrypted
 
 # How to use:
 - **1**: Run ```create_key.py``` and change ALL instances of self.key in ```reaper.py``` to the key that you've just got from ```create_key.py```.
