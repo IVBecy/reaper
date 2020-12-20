@@ -2,9 +2,9 @@
 url="https://bootstrap.pypa.io/get-pip.py"
 echo "[+] Downloading the PIP script"
 curl ${url} -o get-pip.py
-echo "[+] Running the PIP script to setup"
-python get-pip.py
 echo "[+] PIP is now downloaded..."
+python get-pip.py
+echo "[+] PIP is up"
 #Listing the packages
 declare -A packs
 packs=(
