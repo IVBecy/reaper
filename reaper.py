@@ -142,12 +142,13 @@ class TimerWindow():
     self.c_time.set(self.secs)
     self.timer = Label(self.root, textvariable=self.c_time,bg="black", fg="#00FF00", font=("Courier", 25))
     self.timer.pack()
-    # Bitcoin button
-    pay_btc_btn = Button(self.root, text="Pay", fg="#00FF00",bg="#404040", font=("Courier", 20))
-    pay_btc_btn .pack()
     # Explanation
     exp = Label(self.root, text=RANSOM_TEXT, fg="#00FF00",bg="black", font=("Courier", 12,), anchor='center')
     exp.pack()
+    # Bitcoin button
+    pay_btc_btn = Button(self.root, text="Pay", fg="#00FF00",
+                         bg="#404040", font=("Courier", 20))
+    pay_btc_btn .pack()
 
   # Method to decrease timer
   def decrease_time(self):
