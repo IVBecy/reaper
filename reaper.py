@@ -172,8 +172,7 @@ class TakeBack():
 class TimerWindow():
   def __init__(self): 
     # Max time to pay ransom
-    #self.secs = 86400
-    self.secs = 9
+    self.secs = 86400
     # Window
     self.root = Tk()
     self.root.resizable(False,False)
